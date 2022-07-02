@@ -1,4 +1,4 @@
-module GoGoFlowGame
+module warlok.net/m
 
 go 1.18
 
