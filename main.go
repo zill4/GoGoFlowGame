@@ -29,7 +29,7 @@ type Item struct {
 	
 	Name string
 	Stat string
-	itemNumber int `gorm:"unique_index"`
+	ItemNumber int `gorm:"unique_index"`
 	UserID  int
 }
 
@@ -92,13 +92,15 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 
 	// Transforms to JSON 
 	json.NewEncoder(w).Encode(&user)
+
+	fmt.Println("Called getUsers")
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	var user User 
-  var items []Items
+  var items []Item
 	// only find first object with given input
 	DB.First(&user, params["id"])
 	// gets all books associated with this person
@@ -107,6 +109,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	user.Items = items
 
 	json.NewEncoder(w).Encode(&user)
+	fmt.Println("Called getUser")
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +126,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(&user)
 	}
-
+	fmt.Println("Called createUser")
 }
 
 func deleteUser(w http.ResponseWriter, r *http.Request) {
@@ -136,6 +139,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	DB.Delete(&user)
 
 	json.NewEncoder(w).Encode(&user)
+	fmt.Println("Called deleteUser")
 }
 
 func getItems(w http.ResponseWriter, r *http.Request) {
@@ -158,9 +162,9 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 	var item Item
 	
 	json.NewDecoder(r.Body).Decode(&item)
-	createdBook := DB.Create(&item)
+	createdItem := DB.Create(&item)
 
-	ERR = createdBook.Error
+	ERR = createdItem.Error
 
 	if ERR != nil {
 		json.NewEncoder(w).Encode(ERR)
